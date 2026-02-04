@@ -1,16 +1,38 @@
 {
   "name": "merx",
   "version": "0.1.0",
-  "type": "module",
   "description": "Beautiful Mermaid diagrams from the terminal",
+  "keywords": [
+    "mermaid",
+    "diagram",
+    "svg",
+    "ascii",
+    "cli",
+    "terminal"
+  ],
+  "author": "Craft (lukilabs)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lukilabs/merx"
+  },
+  "homepage": "https://github.com/lukilabs/merx#readme",
+  "bugs": {
+    "url": "https://github.com/lukilabs/merx/issues"
+  },
+  "type": "module",
   "bin": {
     "merx": "./dist/cli.mjs"
   },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
