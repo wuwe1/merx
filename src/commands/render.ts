@@ -1,5 +1,7 @@
 import { defineCommand } from 'citty'
-import { readInput } from '../utils/input'
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
+import { readInput, resolveInputFiles } from '../utils/input'
 import { writeOutput } from '../utils/output'
 import { loadConfig } from '../config'
 import { resolveTheme, getThemeNames } from '../utils/theme'
@@ -57,10 +59,14 @@ export default defineCommand({
     border: {
       type: 'string',
       description: 'Border color (hex)'
+    },
+    outdir: {
+      type: 'string',
+      description: 'Output directory for batch rendering'
     }
   },
   async run({ args }) {
-    const { file, output, ascii, theme, bg, fg, accent, line, muted, surface, border } = args
+    const { file, output, ascii, theme, bg, fg, accent, line, muted, surface, border, outdir } = args
 
     try {
       // Load config and resolve theme
@@ -70,7 +76,59 @@ export default defineCommand({
         config
       )
 
-      // Read input (file or stdin)
+      // Check if file is a glob pattern for batch rendering
+      if (file) {
+        const files = await resolveInputFiles(file)
+
+        // Batch rendering mode
+        if (files.length > 1) {
+          console.error(`Rendering ${files.length} files...`)
+
+          let success = 0
+          let failed = 0
+
+          for (const f of files) {
+            try {
+              // Read file content
+              const content = (await fs.readFile(f, 'utf-8')).trim()
+
+              // Generate placeholder output
+              // TODO: Integrate beautiful-mermaid with themeColors
+              let result: string
+              if (ascii) {
+                result = `[ASCII placeholder]\n${content}\n`
+              } else {
+                const themeInfo = themeColors.bg ? `Theme: bg=${themeColors.bg}, fg=${themeColors.fg || 'default'}` : 'Theme: default'
+                result = `<!-- Mermaid diagram from ${f} -->\n<!-- ${themeInfo} -->\n<!-- Content: ${content.substring(0, 50)}... -->\n`
+              }
+
+              // Determine output path
+              const ext = ascii ? '.txt' : '.svg'
+              let outPath: string
+              if (outdir) {
+                await fs.mkdir(outdir, { recursive: true })
+                const basename = path.basename(f).replace(/\.mmd$/, ext)
+                outPath = path.join(outdir, basename)
+              } else {
+                outPath = f.replace(/\.mmd$/, ext)
+              }
+
+              await fs.writeFile(outPath, result)
+              console.error(`  + ${f} -> ${outPath}`)
+              success++
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error)
+              console.error(`  x ${f}: ${message}`)
+              failed++
+            }
+          }
+
+          console.error(`\n${success}/${files.length} files rendered${failed > 0 ? `, ${failed} failed` : ''}`)
+          return
+        }
+      }
+
+      // Single file or stdin mode
       let input
       try {
         input = await readInput(file)

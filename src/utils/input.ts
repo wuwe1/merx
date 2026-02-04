@@ -1,4 +1,22 @@
 import { promises as fs } from 'node:fs'
+import fg from 'fast-glob'
+
+export async function resolveInputFiles(pattern: string): Promise<string[]> {
+  // 检查是否是 glob 模式
+  if (fg.isDynamicPattern(pattern)) {
+    const files = await fg(pattern, {
+      onlyFiles: true,
+      ignore: ['**/node_modules/**']
+    })
+    if (files.length === 0) {
+      throw new Error(`No files match pattern: ${pattern}`)
+    }
+    return files.sort()
+  }
+
+  // 单个文件
+  return [pattern]
+}
 
 export async function readStdin(): Promise<string> {
   const chunks: Buffer[] = []
