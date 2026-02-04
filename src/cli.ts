@@ -3,6 +3,7 @@ import { defineCommand, runMain } from 'citty'
 import render from './commands/render'
 import themes from './commands/themes'
 import init from './commands/init'
+import watch from './commands/watch'
 import { setupErrorHandler } from './utils/errors'
 
 // Setup global error handler before running main
@@ -17,7 +18,8 @@ const main = defineCommand({
   subCommands: {
     render,
     themes,
-    init
+    init,
+    watch
   }
 })
 
