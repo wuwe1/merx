@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from 'citty'
+import render from './commands/render'
 
 const main = defineCommand({
   meta: {
@@ -7,8 +8,8 @@ const main = defineCommand({
     version: '0.1.0',
     description: 'Beautiful Mermaid diagrams from the terminal'
   },
-  run() {
-    console.log('Merx CLI - coming soon!')
+  subCommands: {
+    render
   }
 })
 
