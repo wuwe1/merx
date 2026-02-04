@@ -1,6 +1,7 @@
 import { defineCommand } from 'citty'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import { renderMermaid, renderMermaidAscii } from 'beautiful-mermaid'
 import { readInput, resolveInputFiles } from '../utils/input'
 import { writeOutput } from '../utils/output'
 import { loadConfig } from '../config'
@@ -92,14 +93,20 @@ export default defineCommand({
               // Read file content
               const content = (await fs.readFile(f, 'utf-8')).trim()
 
-              // Generate placeholder output
-              // TODO: Integrate beautiful-mermaid with themeColors
+              // Render using beautiful-mermaid
               let result: string
               if (ascii) {
-                result = `[ASCII placeholder]\n${content}\n`
+                result = renderMermaidAscii(content)
               } else {
-                const themeInfo = themeColors.bg ? `Theme: bg=${themeColors.bg}, fg=${themeColors.fg || 'default'}` : 'Theme: default'
-                result = `<!-- Mermaid diagram from ${f} -->\n<!-- ${themeInfo} -->\n<!-- Content: ${content.substring(0, 50)}... -->\n`
+                result = await renderMermaid(content, {
+                  bg: themeColors.bg,
+                  fg: themeColors.fg,
+                  accent: themeColors.accent,
+                  line: themeColors.line,
+                  muted: themeColors.muted,
+                  surface: themeColors.surface,
+                  border: themeColors.border
+                })
               }
 
               // Determine output path
@@ -145,17 +152,20 @@ export default defineCommand({
 
       const content = input.content.trim()
 
-      // Temporary: generate placeholder output (beautiful-mermaid integration will be completed in later tasks)
-      // TODO: Integrate beautiful-mermaid with themeColors
+      // Render using beautiful-mermaid
       let result: string
       if (ascii) {
-        // ASCII mode: output content itself as placeholder
-        result = `[ASCII placeholder]\n${content}\n`
+        result = renderMermaidAscii(content)
       } else {
-        // SVG mode: generate placeholder SVG (with theme info)
-        const source = input.source === 'file' ? input.filePath : 'stdin'
-        const themeInfo = themeColors.bg ? `Theme: bg=${themeColors.bg}, fg=${themeColors.fg || 'default'}` : 'Theme: default'
-        result = `<!-- Mermaid diagram from ${source} -->\n<!-- ${themeInfo} -->\n<!-- Content: ${content.substring(0, 50)}... -->\n`
+        result = await renderMermaid(content, {
+          bg: themeColors.bg,
+          fg: themeColors.fg,
+          accent: themeColors.accent,
+          line: themeColors.line,
+          muted: themeColors.muted,
+          surface: themeColors.surface,
+          border: themeColors.border
+        })
       }
 
       // Write output
