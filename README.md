@@ -16,8 +16,8 @@ npx merx render diagram.mmd
 # Render to SVG
 merx render diagram.mmd -o output.svg
 
-# Pipe from stdin
-echo "graph LR; A --> B" | merx render
+# Pipe from stdin (use newlines, not semicolons)
+echo -e "graph LR\n  A --> B" | merx render
 
 # ASCII output
 merx render diagram.mmd --ascii
@@ -28,6 +28,8 @@ merx render "docs/**/*.mmd" --outdir ./images
 # Watch mode
 merx watch diagram.mmd
 ```
+
+> **Note**: The Mermaid parser requires newline-separated syntax. Use `echo -e "graph LR\n  A --> B"` instead of `echo "graph LR; A --> B"`.
 
 ## Commands
 
