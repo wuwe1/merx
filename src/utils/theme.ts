@@ -1,18 +1,21 @@
 import type { ThemeColors, MerxConfig } from '../config'
 
-// 内置主题（占位 - beautiful-mermaid 将提供实际主题）
+// 内置主题 - 与 beautiful-mermaid 库对齐
 const builtinThemes: Record<string, ThemeColors> = {
-  'tokyo-night': { bg: '#1a1b26', fg: '#a9b1d6', accent: '#7aa2f7' },
-  'github-dark': { bg: '#0d1117', fg: '#c9d1d9', accent: '#58a6ff' },
-  'github-light': { bg: '#ffffff', fg: '#24292f', accent: '#0969da' },
-  'dracula': { bg: '#282a36', fg: '#f8f8f2', accent: '#bd93f9' },
-  'nord': { bg: '#2e3440', fg: '#eceff4', accent: '#88c0d0' },
-  'monokai': { bg: '#272822', fg: '#f8f8f2', accent: '#a6e22e' },
-  'solarized-dark': { bg: '#002b36', fg: '#839496', accent: '#268bd2' },
-  'solarized-light': { bg: '#fdf6e3', fg: '#657b83', accent: '#268bd2' },
-  'one-dark': { bg: '#282c34', fg: '#abb2bf', accent: '#61afef' },
-  'gruvbox-dark': { bg: '#282828', fg: '#ebdbb2', accent: '#fabd2f' },
-  'catppuccin-mocha': { bg: '#1e1e2e', fg: '#cdd6f4', accent: '#89b4fa' },
+  'tokyo-night-light': { bg: '#d5d6db', fg: '#343b58', line: '#34548a', accent: '#34548a', muted: '#9699a3' },
+  'tokyo-night': { bg: '#1a1b26', fg: '#a9b1d6', line: '#3d59a1', accent: '#7aa2f7', muted: '#565f89' },
+  'tokyo-night-storm': { bg: '#24283b', fg: '#a9b1d6', line: '#3d59a1', accent: '#7aa2f7', muted: '#565f89' },
+  'zinc-dark': { bg: '#18181B', fg: '#FAFAFA' },
+  'github-light': { bg: '#ffffff', fg: '#1f2328', line: '#d1d9e0', accent: '#0969da', muted: '#59636e' },
+  'github-dark': { bg: '#0d1117', fg: '#e6edf3', line: '#3d444d', accent: '#4493f8', muted: '#9198a1' },
+  'dracula': { bg: '#282a36', fg: '#f8f8f2', line: '#6272a4', accent: '#bd93f9', muted: '#6272a4' },
+  'nord': { bg: '#2e3440', fg: '#d8dee9', line: '#4c566a', accent: '#88c0d0', muted: '#616e88' },
+  'nord-light': { bg: '#eceff4', fg: '#2e3440', line: '#aab1c0', accent: '#5e81ac', muted: '#7b88a1' },
+  'solarized-light': { bg: '#fdf6e3', fg: '#657b83', line: '#93a1a1', accent: '#268bd2', muted: '#93a1a1' },
+  'solarized-dark': { bg: '#002b36', fg: '#839496', line: '#586e75', accent: '#268bd2', muted: '#586e75' },
+  'one-dark': { bg: '#282c34', fg: '#abb2bf', line: '#4b5263', accent: '#c678dd', muted: '#5c6370' },
+  'catppuccin-mocha': { bg: '#1e1e2e', fg: '#cdd6f4', line: '#585b70', accent: '#cba6f7', muted: '#6c7086' },
+  'catppuccin-latte': { bg: '#eff1f5', fg: '#4c4f69', line: '#9ca0b0', accent: '#8839ef', muted: '#9ca0b0' },
   'rose-pine': { bg: '#191724', fg: '#e0def4', accent: '#c4a7e7' },
   'ayu-dark': { bg: '#0a0e14', fg: '#b3b1ad', accent: '#ffb454' },
   'material-dark': { bg: '#263238', fg: '#eeffff', accent: '#82aaff' },

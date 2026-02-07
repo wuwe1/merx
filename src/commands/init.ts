@@ -3,7 +3,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 
 const defaultRcContent = `{
-  "theme": "tokyo-night",
+  "theme": "tokyo-night-light",
   "format": "svg",
   "ascii": {
     "width": 80

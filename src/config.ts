@@ -23,7 +23,7 @@ export interface MerxConfig {
 }
 
 export const defaultConfig: MerxConfig = {
-  theme: 'tokyo-night',
+  theme: 'tokyo-night-light',
   format: 'svg',
   ascii: {
     width: 80
