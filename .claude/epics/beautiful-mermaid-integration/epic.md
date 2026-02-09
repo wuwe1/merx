@@ -1,10 +1,10 @@
 ---
 name: beautiful-mermaid-integration
-status: backlog
+status: done
 created: 2026-02-04T08:11:54Z
-progress: 0%
+progress: 100%
 prd: .claude/prds/beautiful-mermaid-integration.md
-github:
+github: https://github.com/wuwe1/merx/issues/12
 ---
 
 # Epic: Beautiful-Mermaid 集成
