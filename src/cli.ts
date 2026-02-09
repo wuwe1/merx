@@ -11,7 +11,7 @@ setupErrorHandler()
 const main = defineCommand({
   meta: {
     name: 'merx',
-    version: '0.2.0',
+    version: '0.2.1',
     description: 'Beautiful Mermaid diagrams from the terminal'
   },
   subCommands: {
