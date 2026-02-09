@@ -5,9 +5,9 @@ Beautiful Mermaid diagrams from the terminal.
 ## Installation
 
 ```bash
-npm install -g merx
+npm install -g @wuwe1/merx
 # or
-npx merx render diagram.mmd
+npx @wuwe1/merx render diagram.mmd
 ```
 
 ## Quick Start
@@ -24,9 +24,6 @@ merx render diagram.mmd --ascii
 
 # Batch render
 merx render "docs/**/*.mmd" --outdir ./images
-
-# Watch mode
-merx watch diagram.mmd
 ```
 
 > **Note**: The Mermaid parser requires newline-separated syntax. Use `echo -e "graph LR\n  A --> B"` instead of `echo "graph LR; A --> B"`.
@@ -44,8 +41,14 @@ Options:
   -o, --output <file>   Output file path
   --outdir <dir>        Output directory for batch rendering
   --ascii               Output as ASCII art
-  --theme <name>        Theme name (default: tokyo-night)
-  --bg, --fg, etc.      Custom colors
+  --theme <name>        Theme name (default: tokyo-night-light)
+  --bg <hex>            Background color
+  --fg <hex>            Foreground color
+  --accent <hex>        Accent color
+  --line <hex>          Line color
+  --muted <hex>         Muted text color
+  --surface <hex>       Surface color
+  --border <hex>        Border color
 ```
 
 ### themes
@@ -66,31 +69,146 @@ merx init
 merx init --force
 ```
 
-### watch
-
-Watch files and re-render on change.
-
-```bash
-merx watch <file|glob> [options]
-```
-
 ## Configuration
 
-Create a `.merxrc` file:
+Create a `.merxrc` file (or run `merx init`):
 
 ```json
 {
-  "theme": "tokyo-night",
+  "theme": "tokyo-night-light",
   "format": "svg",
   "ascii": {
     "width": 80
+  },
+  "themes": {
+    "my-custom-theme": {
+      "bg": "#1e1e2e",
+      "fg": "#cdd6f4",
+      "accent": "#cba6f7"
+    }
   }
 }
 ```
 
+Configuration is loaded from (highest priority first):
+1. CLI flags
+2. Project `.merxrc` (current directory)
+3. User `~/.merxrc` (home directory)
+4. Built-in defaults
+
 ## Themes
 
-15 built-in themes available: tokyo-night, github-dark, github-light, dracula, nord, monokai, solarized-dark, solarized-light, one-dark, gruvbox-dark, catppuccin-mocha, rose-pine, ayu-dark, material-dark, night-owl.
+18 built-in themes:
+
+| Theme | Type |
+|-------|------|
+| tokyo-night-light | Light |
+| tokyo-night | Dark |
+| tokyo-night-storm | Dark |
+| zinc-dark | Dark |
+| github-light | Light |
+| github-dark | Dark |
+| dracula | Dark |
+| nord | Dark |
+| nord-light | Light |
+| solarized-light | Light |
+| solarized-dark | Dark |
+| one-dark | Dark |
+| catppuccin-mocha | Dark |
+| catppuccin-latte | Light |
+| rose-pine | Dark |
+| ayu-dark | Dark |
+| material-dark | Dark |
+| night-owl | Dark |
+
+Preview colors in your terminal:
+
+```bash
+merx themes
+```
+
+## Programmatic Usage
+
+Merx can also be used as a library:
+
+```typescript
+import { renderMermaid, renderMermaidAscii, loadConfig, resolveTheme } from '@wuwe1/merx'
+
+// Simple SVG rendering
+const svg = await renderMermaid('graph LR\n  A --> B', {
+  bg: '#1a1b26',
+  fg: '#a9b1d6'
+})
+
+// ASCII rendering
+const ascii = renderMermaidAscii('graph LR\n  A --> B')
+
+// Use built-in themes
+const config = await loadConfig()
+const colors = resolveTheme({ theme: 'dracula' }, config)
+const themed = await renderMermaid('graph TD\n  Start --> End', colors)
+```
+
+## Troubleshooting
+
+### "No input provided"
+
+You need to either pass a file or pipe content:
+
+```bash
+# From file
+merx render diagram.mmd
+
+# From stdin
+echo -e "graph LR\n  A --> B" | merx render
+```
+
+### Parse errors
+
+Mermaid syntax requires newlines between statements. Semicolons are not supported:
+
+```bash
+# Wrong
+echo "graph LR; A --> B" | merx render
+
+# Correct
+echo -e "graph LR\n  A --> B" | merx render
+```
+
+### Invalid color values
+
+Color flags expect hex format with a `#` prefix:
+
+```bash
+# Correct
+merx render diagram.mmd --bg "#1a1b26"
+
+# Wrong
+merx render diagram.mmd --bg "blue"
+merx render diagram.mmd --bg "1a1b26"
+```
+
+### Theme not found
+
+Run `merx themes` to see all available themes. If a theme name doesn't match, the default theme is used with a warning.
+
+## Development
+
+```bash
+# Clone and install
+git clone https://github.com/wuwe1/merx.git
+cd merx
+npm install
+
+# Build
+npm run build
+
+# Run tests (requires build first)
+npm run build && npm test
+
+# Dev mode (auto-rebuild on change)
+npm run dev
+```
 
 ## License
 

@@ -1,12 +1,12 @@
 import { defineCommand } from 'citty'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
-import { renderMermaid, renderMermaidAscii } from 'beautiful-mermaid'
 import { readInput, resolveInputFiles } from '../utils/input'
 import { writeOutput } from '../utils/output'
 import { loadConfig } from '../config'
 import { resolveTheme, getThemeNames } from '../utils/theme'
 import { MerxError, ExitCode, formatError } from '../utils/errors'
+import { renderDiagram } from '../utils/render'
 
 export default defineCommand({
   meta: {
@@ -90,24 +90,8 @@ export default defineCommand({
 
           for (const f of files) {
             try {
-              // Read file content
               const content = (await fs.readFile(f, 'utf-8')).trim()
-
-              // Render using beautiful-mermaid
-              let result: string
-              if (ascii) {
-                result = renderMermaidAscii(content)
-              } else {
-                result = await renderMermaid(content, {
-                  bg: themeColors.bg,
-                  fg: themeColors.fg,
-                  accent: themeColors.accent,
-                  line: themeColors.line,
-                  muted: themeColors.muted,
-                  surface: themeColors.surface,
-                  border: themeColors.border
-                })
-              }
+              const result = await renderDiagram({ content, ascii, themeColors })
 
               // Determine output path
               const ext = ascii ? '.txt' : '.svg'
@@ -151,22 +135,7 @@ export default defineCommand({
       }
 
       const content = input.content.trim()
-
-      // Render using beautiful-mermaid
-      let result: string
-      if (ascii) {
-        result = renderMermaidAscii(content)
-      } else {
-        result = await renderMermaid(content, {
-          bg: themeColors.bg,
-          fg: themeColors.fg,
-          accent: themeColors.accent,
-          line: themeColors.line,
-          muted: themeColors.muted,
-          surface: themeColors.surface,
-          border: themeColors.border
-        })
-      }
+      const result = await renderDiagram({ content, ascii, themeColors })
 
       // Write output
       let outPath

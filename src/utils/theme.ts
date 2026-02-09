@@ -45,6 +45,15 @@ export interface ThemeArgs {
   border?: string
 }
 
+const HEX_COLOR_RE = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
+
+function validateHexColor(value: string, name: string): string {
+  if (!HEX_COLOR_RE.test(value)) {
+    console.error(`Warning: Invalid color for --${name}: "${value}". Expected hex format (e.g. #ff0000).`)
+  }
+  return value
+}
+
 export function resolveTheme(args: ThemeArgs, config: MerxConfig): ThemeColors {
   // 1. 从 --theme 参数或配置获取基础主题
   const themeName = args.theme || config.theme
@@ -57,15 +66,15 @@ export function resolveTheme(args: ThemeArgs, config: MerxConfig): ThemeColors {
     base = getBuiltinTheme('tokyo-night') || {}
   }
 
-  // 2. 覆盖单独的颜色标志
-  return {
-    ...base,
-    ...(args.bg && { bg: args.bg }),
-    ...(args.fg && { fg: args.fg }),
-    ...(args.accent && { accent: args.accent }),
-    ...(args.line && { line: args.line }),
-    ...(args.muted && { muted: args.muted }),
-    ...(args.surface && { surface: args.surface }),
-    ...(args.border && { border: args.border })
+  // 2. 覆盖单独的颜色标志（带格式校验）
+  const colorKeys = ['bg', 'fg', 'accent', 'line', 'muted', 'surface', 'border'] as const
+  const overrides: Partial<ThemeColors> = {}
+  for (const key of colorKeys) {
+    const val = args[key]
+    if (val) {
+      overrides[key] = validateHexColor(val, key)
+    }
   }
+
+  return { ...base, ...overrides }
 }
