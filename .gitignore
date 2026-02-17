@@ -24,3 +24,8 @@ Thumbs.db
 # CCPM
 .claude/epics/*/updates/
 .claude/settings.local.json
+
+# Symlinked skills (installed via sk, machine-specific)
+.claude/skills/
+.claude/rules/
+.claude/commands/
